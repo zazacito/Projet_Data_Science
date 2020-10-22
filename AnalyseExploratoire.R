@@ -71,3 +71,6 @@ client$taux <- as.integer(client$taux)
 client$situationFamiliale <- as.factor(client$situationFamiliale)
 client$nbEnfantsAcharge <- as.integer(client$nbEnfantsAcharge)
 client$X2eme.voiture <- as.logical(client$X2eme.voiture)
+client$sexe <- as.factor(client$sexe)
+
+str(client)
