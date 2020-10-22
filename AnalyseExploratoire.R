@@ -131,3 +131,5 @@ boxplot(clients_nettoyes$age, data=client, main="Boite à Moustache pour
 
 
 
+
+
