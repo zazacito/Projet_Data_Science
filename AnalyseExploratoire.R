@@ -17,7 +17,9 @@ catalogue$couleur <- as.factor(catalogue$couleur)
 catalogue$occasion <- as.logical(catalogue$occasion)
 
 
-str(catalogue)
+str(catalogue$longueur)
+summary(catalogue$longueur)
+summary(catalogue$puissance)
 summary(catalogue)
 
 #visualiser les valeurs nulles et NA
