@@ -51,6 +51,11 @@ client <- read.csv("../DATA/data_initial/Clients_8.csv", header = TRUE,
 
 names(client)[6] = ("DeuxiemeVoiture")
 
+
+client$age <- as.integer(client$age)
+client$taux <- as.integer(client$taux)
+client$nbEnfantsAcharge <- as.integer(client$nbEnfantsAcharge)
+
 dbWriteTable(conn,"Client",client,   
              rownames=FALSE, overwrite = TRUE, append = FALSE)
 
@@ -63,5 +68,5 @@ allTables <- dbGetQuery(conn, "SELECT owner, table_name FROM all_tables where
 marketingOracle <- dbGetQuery(conn, "select * from Marketing")
 catalogueOracle <- dbGetQuery(conn, "select * from Catalogue")
 immatriculationsOracle <- dbGetQuery(conn,"select * from Immatriculations")
-clientOracle <- dbGetQuery(conn,"select * from Client")
+clientOracle <- dbGetQuery(conn,"select * from Clients")
 
