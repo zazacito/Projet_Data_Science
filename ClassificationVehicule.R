@@ -21,12 +21,7 @@ immatriculations$categories <- ifelse(immatriculations$longueur=="courte" & imma
                                ifelse( immatriculations$longueur=="très longue" & immatriculations$puissance > 250 & immatriculations$nbPlaces== 5,"berline ultra sportive" ,
                                ifelse(immatriculations$longueur=="longue" & immatriculations$puissance >=55 & immatriculations$puissance <= 120  &  immatriculations$nbPlaces== 5,"familliale",
                                ifelse(immatriculations$longueur=="longue"  & immatriculations$puissance > 120 & immatriculations$nbPlaces== 5 ,"familliale sportive","aucune" ))))))))))
-                                      
-'ifelse(immatriculations$longueur=="moyenne","compacte",
- ifelse(immatriculations$longueur=="longue"& immatriculations$nbPlaces== 5& immatriculations$puissance<180,"routière",
-  ifelse(immatriculations$longueur=="longue"&immatriculations$nbPlaces== 7&immatriculations$puissance<180,"familiale",
-    ifelse(immatriculations$longueur=="longue" | immatriculations$longueur=="très longue" & immatriculations$puissance >180 ,"sportive","rien"))))))
-'
+
 
 immatriculations$categories <-  as.factor(immatriculations$categories)
 str(immatriculations$categories)

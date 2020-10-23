@@ -47,8 +47,8 @@ AND situationfamiliale != 'Seule';
 
 
 Recherche des Valeurs erronnées pour le taux
-select * from client where taux < '0' ;
-delete from client where taux < '0' ;
+select * from client where taux < 0 ;
+delete from client where taux < 0 ;
 
 Recherche des Valeurs erronnées pour la deuxieme voiture
 select * from client where deuxiemevoiture !='true' and deuxiemevoiture !='false';

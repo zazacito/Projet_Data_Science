@@ -3,6 +3,7 @@ Sys.setenv(JAVA_HOME="C:/Program Files/Java/jdk1.8.0_144")
 
 library("rJava")
 library(RJDBC)
+library(ggplot2)
 
 ##classPath : add path to drivers jdbc
 
@@ -55,3 +56,10 @@ summary(marketing)
 summary(catalogue)
 summary(immatriculations)
 summary(client)
+
+#Analyse Exploratoire pour déterminer des catégories
+
+
+qplot(LONGUEUR, PUISSANCE, data=catalogue, 
+      main="Longueur de la voiture en fonction de la puissance",
+      xlab="Longueur de la Voiture", ylab="Puissance (en Chevaux)",color=NBPLACES)+  geom_jitter(width = 0.4)
