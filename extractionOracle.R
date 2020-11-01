@@ -1,4 +1,5 @@
 install.packages("rJava")
+install.packages("RJDBC")
 Sys.setenv(JAVA_HOME="C:/Program Files/Java/jdk1.8.0_144")
 
 library("rJava")
@@ -7,14 +8,14 @@ library(RJDBC)
 ##classPath : add path to drivers jdbc
 
 drv <- RJDBC::JDBC(driverClass = "oracle.jdbc.OracleDriver", classPath =  
-                     Sys.glob("C:/Users/v.azalbert/Documents/Semestre_5/DataScience/drivers/*"))
+                     Sys.glob("C:/Users/j.chambord/Documents/GitHub/Projet_Data_Science/drivers/*"))
 
 
 #Connexion OK
 conn <- dbConnect(drv, "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)
                   (HOST=144.21.67.201)(PORT=1521))(CONNECT_DATA=
                   (SERVICE_NAME=pdbest21.631174089.oraclecloud.internal)))",
-                  "AZALBERT2B20", "AZALBERT2B2001")
+                  "CHAMBORD2B20", "CHAMBORD2B2001")
 
 
 #Enregistrement de la table Marketing  dans la DB Oracle
@@ -63,7 +64,7 @@ dbWriteTable(conn,"Client",client,
 
 #Visualisation des tables
 allTables <- dbGetQuery(conn, "SELECT owner, table_name FROM all_tables where 
-                        owner = 'AZALBERT2B20'")
+                        owner = 'CHAMBORD2B20'")
 
 marketingOracle <- dbGetQuery(conn, "select * from Marketing")
 catalogueOracle <- dbGetQuery(conn, "select * from Catalogue")

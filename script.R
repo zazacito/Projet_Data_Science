@@ -89,7 +89,7 @@ immatriculations$categories <- ifelse(immatriculations$longueur=="courte" & imma
 
 
 immatriculations$categories <-  as.factor(immatriculations$categories)
-str(immatriculations$categories)
+#str(immatriculations$categories)
 summary(immatriculations$categories)
 
 
@@ -129,6 +129,15 @@ clients_immatriculations <- merge(immatriculations, client , by ="immatriculatio
 
 #Suppression de la colonne immatriculations
 clients_immatriculations<-clients_immatriculations[,-1]
+
+
+#boite a moustache du taux 
+
+boxplot(clients_immatriculations$TAUX, data=clients_immatriculations,
+        main ="Taux"
+        ,col=c("blue"))
+
+summary(clients_immatriculations$TAUX)
 
 #ENSEMBLE D'APPRENTISSAGE
 #clients_immatriculations_EA : sélection des 29014 premières lignes de clients_immatriculations.(70% de données)"
@@ -185,6 +194,7 @@ clients_immatriculations_ET$DEUXIEMEVOITURE <- as.factor(clients_immatriculation
 summary(clients_immatriculations_ET)
 
 #Suppression des colonnes ou la quantité de factor est trop éléve et des données inutiles
+
 #Seules les catégories, et les données "humaines" sur les clients nous importent
 
 clients_immatriculations_EA <- subset(clients_immatriculations_EA, select = -nbPortes)
@@ -287,7 +297,7 @@ print(nb_auc)
 # Apprentissage du classifeur de type svm
 svm <- svm(categories~., clients_immatriculations_EA, probability=TRUE)
 
-# Test du classifieur : classe predite
+S# Test du classifieur : classe predite
 svm_class <- predict(svm, clients_immatriculations_ET, type="response")
 table(svm_class)
 
