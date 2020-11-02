@@ -139,6 +139,16 @@ boxplot(clients_immatriculations$TAUX, data=clients_immatriculations,
 
 summary(clients_immatriculations$TAUX)
 
+
+#categorie de taux 
+
+clients_immatriculations$cateTaux<- ifelse(clients_immatriculations$TAUX < 420 ,"faible",
+                                           ifelse(clients_immatriculations$TAUX <607.1, "moyen",
+                                                  ifelse(clients_immatriculations$TAUX <823, "elevee", "tres eleve")))
+
+
+summary (clients_immatriculations$cateTaux)
+
 #ENSEMBLE D'APPRENTISSAGE
 #clients_immatriculations_EA : sélection des 29014 premières lignes de clients_immatriculations.(70% de données)"
 clients_immatriculations_EA <- clients_immatriculations[1:68773,]
@@ -167,6 +177,7 @@ clients_immatriculations_EA$TAUX <- as.factor(clients_immatriculations_EA$TAUX)
 clients_immatriculations_EA$SITUATIONFAMILIALE <- as.factor(clients_immatriculations_EA$SITUATIONFAMILIALE)
 clients_immatriculations_EA$NBENFANTSACHARGE <- as.factor(clients_immatriculations_EA$NBENFANTSACHARGE)
 clients_immatriculations_EA$DEUXIEMEVOITURE <- as.factor(clients_immatriculations_EA$DEUXIEMEVOITURE)
+clients_immatriculations_EA$cateTaux <- as.factor(clients_immatriculations_EA$cateTaux)
 
 summary(clients_immatriculations_EA)
 
@@ -190,6 +201,7 @@ clients_immatriculations_ET$TAUX <- as.factor(clients_immatriculations_ET$TAUX)
 clients_immatriculations_ET$SITUATIONFAMILIALE <- as.factor(clients_immatriculations_ET$SITUATIONFAMILIALE)
 clients_immatriculations_ET$NBENFANTSACHARGE <- as.factor(clients_immatriculations_ET$NBENFANTSACHARGE)
 clients_immatriculations_ET$DEUXIEMEVOITURE <- as.factor(clients_immatriculations_ET$DEUXIEMEVOITURE)
+clients_immatriculations_ET$cateTaux <- as.factor(clients_immatriculations_ET$cateTaux)
 
 summary(clients_immatriculations_ET)
 
@@ -302,10 +314,10 @@ svm_class <- predict(svm, clients_immatriculations_ET, type="response")
 table(svm_class)
 
 # Matrice de confusion
-table(produit_QF_ET$Produit, svm_class)
+table(clients_immatriculations_ET$categories, svm_class)
 
 # Test du classifieur : probabilites pour chaque prediction
-svm_prob <- predict(svm, produit_QF_ET, probability=TRUE)
+svm_prob <- predict(svm, clients_immatriculations_ET, probability=TRUE)
 
 # L'objet genere est de type specifique aux svm
 svm_prob
@@ -326,5 +338,35 @@ svm_auc <- performance(svm_pred, "auc")
 attr(svm_auc, "y.values")
 
 
+#Calcul de la courbe ROC
+
+p.tree2 <- predict(rf, clients_immatriculations_ET, type="prob")
+roc.pred2 <- prediction(p.tree2[,9], clients_immatriculations_ET$categories)                                                     
+roc.perf2 <- performance(roc.pred2,"tpr","fpr")
+
+svm_prob <- predict(svm, clients_immatriculations_ET, probability=TRUE)
+svm_prob <- attr(svm_prob, "probabilities")
+svm_prob <- as.data.frame(svm_prob)
+roc.pred3 <- prediction(svm_prob$Oui, clients_immatriculations_ET$categories)                                                     
+roc.perf3 <- performance(roc.pred3,"tpr","fpr")
+
+p.tree4 <- predict(nb, clients_immatriculations_ET, type="prob")
+roc.pred4 <- prediction(p.tree4[,2], clients_immatriculations_ET$categories)                                                     
+roc.perf4 <- performance(roc.pred4,"tpr","fpr")
+
+p.tree5 <- predict(nnet5, clients_immatriculations_ET, type="raw")
+roc.pred5 <- prediction(p.tree5[,1], clients_immatriculations_ET$categories)                                                     
+roc.perf5 <- performance(roc.pred5,"tpr","fpr")
+
+p.tree6 <- predict(kknn6, clients_immatriculations_ET, type="prob")
+roc.pred6 <- prediction(p.tree6[,2], clients_immatriculations_ET$categories)                                                     
+roc.perf6 <- performance(roc.pred6,"tpr","fpr")
+
+
+plot(roc.perf2, col = "gray")
+plot(roc.perf3, col = "yellow",add=TRUE)
+plot(roc.perf4, col = "red",add=TRUE)
+plot(roc.perf5, col = "blue",add=TRUE)
+plot(roc.perf6, col = "purple",add=TRUE)
 
 
