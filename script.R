@@ -12,7 +12,9 @@ library(randomForest)
 library(C50)
 library(e1071)
 library(naivebayes)
-
+library(rpart)
+library(C50)
+library(tree)
 
 ##classPath : add path to drivers jdbc
 
@@ -270,6 +272,41 @@ nb_prob <- predict(nb,  clients_immatriculations_ET, type="prob")
 nb_auc <- multiclass.roc(clients_immatriculations_ET$categories, nb_prob)
 print(nb_auc)
 
+#-------------#
+#      SVM    #
+#-------------#
+
+# Apprentissage du classifeur de type svm
+svm <- svm(categories~., clients_immatriculations_EA, probability=TRUE)
+svm
+
+
+# Test du classifieur : classe predite
+svm_class <- predict(svm, clients_immatriculations_ET, type="response")
+svm_class
+table(svm_class)
+
+# Matrice de confusion
+table(clients_immatriculations_ET$categories, svm_class)
+
+# Test du classifieur : probabilites pour chaque prediction
+svm_prob <- predict(svm, clients_immatriculations_ET, probability=TRUE)
+
+
+# Recuperation des probabilites associees aux predictions
+svm_prob <- attr(svm_prob, "probabilities")
+
+# Conversion en un data frame 
+svm_prob <- as.data.frame(svm_prob)
+
+
+# Calcul de l'AUC
+svm_auc <-multiclass.roc(clients_immatriculations_ET$categories, svm_prob)
+print (svm_auc)
+
+
+
+
 
 #-----------------------Catégories Taux--------------------------#
 
@@ -385,4 +422,89 @@ table( clients_immatriculations_ET_taux$categories, nb_class_taux)
 nb_prob_taux <- predict(nb_taux,  clients_immatriculations_ET_taux, type="prob")
 nb_auc_taux <- multiclass.roc(clients_immatriculations_ET_taux$categories, nb_prob_taux)
 print(nb_auc_taux)
+
+
+#-------------#
+#      SVM    #
+#-------------#
+
+# Apprentissage du classifeur de type svm
+svm <- svm(categories~., clients_immatriculations_EA_taux, probability=TRUE)
+svm
+
+
+# Test du classifieur : classe predite
+svm_class <- predict(svm, clients_immatriculations_ET_taux, type="response")
+svm_class
+table(svm_class)
+
+# Matrice de confusion
+table(clients_immatriculations_ET_taux$categories, svm_class)
+
+# Test du classifieur : probabilites pour chaque prediction
+svm_prob <- predict(svm, clients_immatriculations_ET_taux, probability=TRUE)
+
+
+# Recuperation des probabilites associees aux predictions
+svm_prob <- attr(svm_prob, "probabilities")
+
+# Conversion en un data frame 
+svm_prob <- as.data.frame(svm_prob)
+
+
+# Calcul de l'AUC
+svm_auc <-multiclass.roc(clients_immatriculations_ET_taux$categories, svm_prob)
+print (svm_auc)
+
+
+#--------------------------------------------#
+# APPLICATION DE LA METHODE NEURAL NETWORKS #
+#------------------------------------------#
+
+## Application des catégories de taux au fichier marketing
+
+#Création de categorie de taux 
+
+
+marketing$cateTaux<- ifelse(marketing$TAUX < 420 ,"Faible",
+                                                ifelse(marketing$TAUX <607.1, "Moyen",
+                                                       ifelse(marketing$TAUX <823, "Elevée", "Très élevée")))
+
+marketing$cateTaux <- as.factor(marketing$cateTaux)
+marketing$SEXE <- as.factor(marketing$SEXE)
+marketing$SITUATIONFAMILIALE <- as.factor(marketing$SITUATIONFAMILIALE)
+marketing$DEUXIEMEVOITURE <- as.factor(marketing$DEUXIEMEVOITURE)
+marketing$AGE <- as.factor(marketing$AGE)
+marketing$NBENFANTSACHARGE <- as.factor(marketing$NBENFANTSACHARGE)
+
+summary(marketing)
+
+marketingResultat <- marketing
+marketing <- subset(marketing, select = -TAUX)
+
+
+#Apprentissage
+nnet5_marketing<-nnet(categories ~., clients_immatriculations_taux, size=7)
+
+#Classification
+catégorie_prédite<- predict(nnet5_marketing, marketing, type="class")
+catégorie_prédite
+table(catégorie_prédite)
+
+# Recuperation des probabilites pour chaque prediction
+nn_prob_marketing <- predict(nnet5_marketing, marketing, type="raw")
+
+nn_prob_marketing
+
+
+
+resultat <- data.frame(marketingResultat,catégorie_prédite,nn_prob_marketing)
+
+
+#---------------------------------#
+# ENREGISTREMENT DES PREDICTIONS  #
+#---------------------------------#
+# Enregistrement du fichier de resultats au format csv
+write.table(resultat, file='predictions.csv', sep="\t", dec=".", row.names = F)
+
 
