@@ -280,7 +280,6 @@ print(nb_auc)
 svm <- svm(categories~., clients_immatriculations_EA, probability=TRUE)
 svm
 
-
 # Test du classifieur : classe predite
 svm_class <- predict(svm, clients_immatriculations_ET, type="response")
 svm_class
@@ -298,7 +297,6 @@ svm_prob <- attr(svm_prob, "probabilities")
 
 # Conversion en un data frame 
 svm_prob <- as.data.frame(svm_prob)
-
 
 # Calcul de l'AUC
 svm_auc <-multiclass.roc(clients_immatriculations_ET$categories, svm_prob)
