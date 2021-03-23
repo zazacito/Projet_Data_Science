@@ -1,6 +1,9 @@
-Suppression de toutes les lignes ou l''âge était erroné
+Recherche des Valeurs erronnées pour l''âge
 
 select * from client where age <18;
+
+Suppression de toutes les lignes ou l''âge était erroné
+
 delete from client where age < 18 ;
 
 
@@ -43,7 +46,6 @@ AND situationfamiliale != 'En Couple'
 AND situationfamiliale != 'Marié(e)'
 AND situationfamiliale != 'Seul'
 AND situationfamiliale != 'Seule';
-
 
 
 Recherche des Valeurs erronnées pour le taux
